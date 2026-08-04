@@ -1,0 +1,117 @@
+/* ====================================================== */
+/* ESTILOS DE CELDAS (SLOTS) MEJORADOS */
+/* ====================================================== */
+.slot-box {
+    height: 55px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-weight: 800; /* Texto más gordito */
+    font-size: 0.75rem; /* Texto un poco más pequeño para que quepa "RESERVADO" */
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    
+    /* Base */
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    user-select: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* ------------------------------------------------------ */
+/* ESTADOS LÓGICOS */
+/* ------------------------------------------------------ */
+
+/* A. PASADO (Invisible) */
+.slot-box.PASADO {
+    visibility: hidden; 
+    pointer-events: none;
+}
+
+/* B. BLOQUEADO (Feriados) -> GRIS ACERO */
+.slot-box.BLOQUEADO {
+    background-color: #6c757d !important; /* Gris profesional */
+    color: white !important;
+    border: 1px solid #545b62 !important;
+    cursor: not-allowed;
+    opacity: 0.9;
+}
+
+/* C. OCUPADO (Reservado) -> ROJO ALERTA */
+.slot-box.OCUPADO {
+    background-color: #dc3545 !important; /* Rojo Bootstrap */
+    color: white !important;
+    border: 1px solid #bd2130 !important;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1); /* Sombra interna para profundidad */
+}
+
+/* D. LIBRE (Disponible) -> BLANCO CON BORDE VERDE */
+.slot-box.LIBRE {
+    background-color: #ffffff !important;
+    border: 2px solid #28a745 !important;
+    color: #28a745 !important;
+    cursor: pointer !important;
+    font-size: 0.85rem; /* El texto "LIBRE" puede ser un poco más grande */
+}
+
+.slot-box.LIBRE:hover {
+    background-color: #e8f5e9 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);
+}
+
+/* E. SELECCIONADO -> CYAN (Tu color de marca) */
+.slot-box.selected {
+    background-color: #00bcd4 !important;
+    color: #ffffff !important;
+    border: 2px solid #0097a7 !important;
+    transform: scale(1.05);
+    z-index: 5;
+    box-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
+}
+
+/* Leyenda Actualizada */
+.legend-box.blocked  { background-color: #6c757d; border: 1px solid #6c757d; }
+.legend-box.occupied { background-color: #dc3545; border: 1px solid #dc3545; }
+
+/* ==========================================
+   HEURÍSTICA 5: PREVENCIÓN DE ERRORES 
+   Bloqueo estricto de eventos del mouse
+========================================== */
+.slot-box.OCUPADO,
+.slot-box.BLOQUEADO,
+.slot-box.PASADO {
+    cursor: not-allowed !important;
+    pointer-events: none !important; /* Desactiva el clic por completo */
+    user-select: none; /* Evita que el texto sea seleccionable */
+    opacity: 0.65;
+}
+
+/* Colores semánticos para guiar al usuario */
+.slot-box.OCUPADO {
+    background-color: #fff3cd !important; /* Amarillo de advertencia */
+    color: #856404 !important;
+    border-color: #ffeeba !important;
+}
+
+.slot-box.BLOQUEADO {
+    background-color: #f8d7da !important; /* Rojo de error/peligro */
+    color: #721c24 !important;
+    border-color: #f5c2c7 !important;
+}
+
+.slot-box.PASADO {
+    background-color: #e9ecef !important; /* Gris neutro para el pasado */
+    color: #6c757d !important;
+    border-color: #dee2e6 !important;
+}
+
+/* Efecto hover para la "X" del formulario */
+.hover-danger:hover {
+    color: #dc3545 !important;
+    transition: color 0.2s ease-in-out;
+}

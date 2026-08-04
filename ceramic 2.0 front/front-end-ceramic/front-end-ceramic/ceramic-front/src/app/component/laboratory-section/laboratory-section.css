@@ -1,0 +1,24 @@
+.section-title {
+    color: #003366; /* Azul Oscuro */
+}
+
+.check-list li {
+    font-size: 1.05rem;
+    color: #555;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+
+.check-list li:last-child {
+    border-bottom: none;
+}
+
+/* Efecto suave en la imagen */
+.img-wrapper img {
+    width: 100%;
+    transition: transform 0.3s ease;
+}
+
+.img-wrapper:hover img {
+    transform: scale(1.02);
+}

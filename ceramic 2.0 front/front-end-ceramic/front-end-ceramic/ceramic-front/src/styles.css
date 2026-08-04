@@ -1,0 +1,165 @@
+/* Importar fuentes de Google */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+
+/* VARIABLES GLOBALES */
+:root {
+    --primary-blue: #003366;
+    --secondary-aqua: #00bcd4;
+    --accent-yellow: #ffc107;
+    --clean-white: #ffffff;
+    --success-green: #25d366;
+    --text-dark: #333333;
+    --bg-dashboard: #f4f6f9;
+    --sidebar-width: 250px;
+}
+
+/* RESET Y BASES */
+body { 
+    font-family: 'Poppins', sans-serif; 
+    color: var(--text-dark); 
+    background-color: var(--clean-white); 
+    margin: 0;
+}
+
+/* NAVBAR */
+.navbar { background-color: var(--clean-white); box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 15px 0; }
+.navbar-brand { font-weight: 700; color: var(--primary-blue) !important; font-size: 1.5rem; text-decoration: none; }
+.nav-link { color: var(--primary-blue); font-weight: 500; margin-right: 15px; transition: color 0.3s; cursor: pointer; }
+.nav-link:hover { color: var(--secondary-aqua); }
+
+/* HERO SECTION (PORTADA) */
+.hero-section {
+    /* IMPORTANTE: Angular busca las imágenes en /assets/ */
+    background: linear-gradient(rgba(0, 51, 102, 0.8), rgba(0, 51, 102, 0.6)), 
+                url('assets/img/Portada.png');
+    background-size: cover; 
+    background-position: center top; 
+    min-height: 100vh;
+    display: flex; 
+    align-items: center; 
+    padding-top: 80px; 
+    position: relative;
+}
+
+.hero-text h1 { color: white; font-weight: 700; font-size: 3.5rem; margin-bottom: 20px; }
+.hero-text p { color: #f8f9fa; font-size: 1.2rem; margin-bottom: 30px; }
+
+/* TARJETA DE RESERVA (HOME) */
+.booking-card { 
+    background: rgba(255, 255, 255, 0.95); 
+    border-radius: 15px; 
+    padding: 30px; 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+    border-top: 5px solid var(--secondary-aqua); 
+}
+
+/* BOTÓN AMARILLO (CTA) - Estilo corregido y unificado */
+.btn-cta { 
+    background-color: var(--accent-yellow) !important; 
+    color: var(--primary-blue) !important; 
+    font-weight: 800; 
+    border: none; 
+    padding: 15px; 
+    width: 100%; 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    border-radius: 5px; 
+    margin-top: 10px;
+    transition: transform 0.2s; 
+}
+.btn-cta:hover { 
+    transform: scale(1.02); 
+    background-color: #e0a800 !important; 
+}
+
+/* SECCIONES GENERALES */
+.section-padding { padding: 80px 0; }
+.section-title { color: var(--primary-blue); font-weight: 700; text-align: center; margin-bottom: 50px; position: relative; }
+.section-title::after { content: ''; width: 60px; height: 3px; background-color: var(--secondary-aqua); display: block; margin: 10px auto; }
+
+/* NOTA: Los estilos de .service-grid-card fueron eliminados de aquí
+   porque ahora están en src/app/component/clinical-services/clinical-services.component.css */
+
+/* FOTOS DE ESPECIALISTAS */
+.specialist-img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    object-position: top;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+/* FOOTER */
+footer { background-color: var(--primary-blue); color: white; padding: 50px 0 20px; }
+.footer-links a { color: #ccc; text-decoration: none; display: block; margin-bottom: 10px; }
+
+/* ============================
+   ESTILOS DEL DASHBOARD (ADMIN)
+   ============================ */
+#dashboard-container { display: flex; background-color: var(--bg-dashboard); min-height: 100vh; }
+
+.sidebar {
+    width: var(--sidebar-width); 
+    background-color: var(--primary-blue); 
+    color: white;
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    height: 100%; 
+    padding-top: 20px; 
+    z-index: 1050;
+}
+.sidebar-header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.sidebar-menu { list-style: none; padding: 0; margin-top: 20px; }
+.sidebar-item { padding: 15px 25px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; color: rgba(255,255,255,0.8); }
+.sidebar-item:hover, .sidebar-item.active { background-color: rgba(255,255,255,0.1); border-left: 4px solid var(--secondary-aqua); color: white; }
+.sidebar-item i { width: 35px; }
+
+.dashboard-main { margin-left: var(--sidebar-width); padding: 30px; width: 100%; }
+
+.dash-card { 
+    background: white; 
+    border-radius: 12px; 
+    padding: 25px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
+    margin-bottom: 20px; 
+    border-top: 4px solid transparent; 
+}
+
+/* Bordes de colores para las tarjetas */
+.border-blue { border-color: var(--primary-blue); }
+.border-aqua { border-color: var(--secondary-aqua); }
+.border-yellow { border-color: var(--accent-yellow); }
+
+/* Iconos y fondos de dashboard */
+.stat-icon { width: 50px; height: 50px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-right: 15px; }
+.bg-light-blue { background: #e3f2fd; color: var(--primary-blue); }
+.bg-light-aqua { background: #e0f7fa; color: var(--secondary-aqua); }
+.bg-light-yellow { background: #fff8e1; color: #ffb300; }
+
+/* ESTILOS WHATSAPP FLOTANTE */
+.whatsapp-float {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: #25d366;
+    color: white;
+    font-size: 35px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+    z-index: 9999;
+    transition: transform 0.3s;
+    text-decoration: none;
+}
+.whatsapp-float:hover {
+    transform: scale(1.1);
+    color: white;
+    background-color: #20b857;
+}

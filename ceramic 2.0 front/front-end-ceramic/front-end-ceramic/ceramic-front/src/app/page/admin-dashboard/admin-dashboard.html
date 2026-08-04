@@ -1,0 +1,346 @@
+<div id="dashboard-container">
+    <div class="sidebar">
+        <div class="sidebar-header d-flex align-items-center p-3">
+            <div class="bg-white rounded p-1 me-2 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                <img src="/assets/img/Logo.png" alt="Logo Admin" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+            <h5 class="m-0 fw-bold text-white">Ceramic Admin</h5>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="sidebar-item" [class.active]="vistaActual === 'inicio'" (click)="vistaActual = 'inicio'">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </li>
+            <li class="sidebar-item" [class.active]="vistaActual === 'agenda'" (click)="vistaActual = 'agenda'">
+                <i class="fas fa-calendar-alt"></i> Agenda
+            </li>
+            <li class="sidebar-item" [class.active]="vistaActual === 'pacientes'" (click)="vistaActual = 'pacientes'">
+                <i class="fas fa-users"></i> Pacientes
+            </li>
+            <li class="sidebar-item" [class.active]="vistaActual === 'laboratorio'" (click)="vistaActual = 'laboratorio'">
+                <i class="fas fa-teeth-open"></i> Laboratorio
+            </li>
+            <li class="sidebar-item mt-5" (click)="logout()">
+                <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+            </li>
+        </ul>
+    </div>
+
+    <div class="dashboard-main bg-light">
+        <!-- CABECERA SUPERIOR -->
+        <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded-4 shadow-sm border-0">
+            <h4 class="m-0 fw-bold text-dark">{{ vistaActual === 'inicio' ? 'Centro de Mando Analítico' : (vistaActual | titlecase) }}</h4>
+            <div class="d-flex align-items-center">
+                <div class="text-end me-3">
+                    <span class="d-block fw-bold text-dark mb-0 pb-0" style="line-height: 1;">Admin</span>
+                    <small class="text-muted" style="font-size: 0.75rem;">Dra. Olga</small>
+                </div>
+                <img src="https://ui-avatars.com/api/?name=Dra+Olga&background=0d6efd&color=fff" class="rounded-circle shadow-sm" width="45">
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VISTA: DASHBOARD BI -->
+        <!-- ========================================== -->
+        <div *ngIf="vistaActual === 'inicio'">
+            
+            <!-- 1. BARRA MAESTRA DE FILTROS -->
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3 bg-white p-3 rounded-4 shadow-sm border-start border-4 border-primary">
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <div class="d-flex align-items-center bg-light px-3 py-1 rounded-pill border">
+                        <label class="me-2 fw-bold text-muted small"><i class="far fa-calendar text-primary me-1"></i> Desde:</label>
+                        <input type="date" class="form-control form-control-sm border-0 bg-transparent shadow-none p-0" style="outline: none;" [(ngModel)]="fechaInicioFiltro" (change)="onFiltroChange()">
+                    </div>
+                    <div class="d-flex align-items-center bg-light px-3 py-1 rounded-pill border">
+                        <label class="me-2 fw-bold text-muted small"><i class="far fa-calendar text-primary me-1"></i> Hasta:</label>
+                        <input type="date" class="form-control form-control-sm border-0 bg-transparent shadow-none p-0" style="outline: none;" [(ngModel)]="fechaFinFiltro" (change)="onFiltroChange()">
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <select class="form-select form-select-sm shadow-sm border-0 bg-light rounded-pill px-3 py-2 fw-bold text-secondary" [(ngModel)]="filtroEstado" (change)="onFiltroChange()">
+                            <option value="Todos">📂 Todos los estados</option>
+                            <option value="Pendiente">⏳ Solo Pendientes</option>
+                            <option value="Confirmada">✅ Solo Confirmadas</option>
+                            <option value="Cancelada">❌ Solo Canceladas</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-success shadow-sm rounded-pill px-4 transition-hover" (click)="exportarExcel()" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Descarga un reporte en Excel de las citas que estás viendo en pantalla">
+                    <i class="fas fa-file-excel me-2"></i> Exportar Datos
+                </button>
+            </div>
+
+            <!-- 2. TARJETAS KPI -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3">
+                    <div class="bg-white p-3 rounded-4 shadow-sm border-start border-primary border-4 h-100 d-flex align-items-center transition-hover">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; background-color: rgba(13, 110, 253, 0.1); color: #0d6efd;">
+                            <i class="fas fa-users fa-lg"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted fw-bold text-uppercase" style="letter-spacing: 1px; font-size: 0.65rem;">Volumen Total</small>
+                            <h3 class="m-0 fw-bold text-dark lh-1">{{ totalCitasDashboard }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="bg-white p-3 rounded-4 shadow-sm border-start border-success border-4 h-100 d-flex align-items-center transition-hover">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; background-color: rgba(25, 135, 84, 0.1); color: #198754;">
+                            <i class="fas fa-chart-line fa-lg"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted fw-bold text-uppercase" style="letter-spacing: 1px; font-size: 0.65rem;">Efectividad (Asistencia)</small>
+                            <h3 class="m-0 fw-bold text-dark lh-1">{{ tasaEfectividad }}%</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="bg-white p-3 rounded-4 shadow-sm border-start border-warning border-4 h-100 d-flex align-items-center transition-hover">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; background-color: rgba(255, 193, 7, 0.15); color: #d39e00;">
+                            <i class="fas fa-star fa-lg"></i>
+                        </div>
+                        <div class="overflow-hidden">
+                            <small class="text-muted fw-bold text-uppercase" style="letter-spacing: 1px; font-size: 0.65rem;">Tratamiento Top</small>
+                            <h5 class="m-0 fw-bold text-dark text-truncate lh-1 mt-1" [title]="tratamientoEstrella">{{ tratamientoEstrella }}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="bg-white p-3 rounded-4 shadow-sm border-start border-danger border-4 h-100 d-flex align-items-center transition-hover">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px; background-color: rgba(220, 53, 69, 0.1); color: #dc3545;">
+                            <i class="fas fa-times-circle fa-lg"></i>
+                        </div>
+                        <div>
+                            <small class="text-muted fw-bold text-uppercase" style="letter-spacing: 1px; font-size: 0.65rem;">Canceladas</small>
+                            <h3 class="m-0 fw-bold text-dark lh-1">{{ canceladasDashboard }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. GRÁFICOS VISUALES -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="bg-white p-4 rounded-4 shadow-sm h-100">
+                        <h6 class="fw-bold text-secondary mb-4"><i class="fas fa-chart-pie me-2 text-primary"></i>Distribución de Servicios</h6>
+                        <div style="height: 220px; position: relative;">
+                            <canvas *ngIf="doughnutChartData.datasets[0].data.length > 0" baseChart
+                                [data]="doughnutChartData"
+                                [options]="doughnutChartOptions"
+                                [type]="'doughnut'">
+                            </canvas>
+                            <div *ngIf="doughnutChartData.datasets[0].data.length === 0" class="d-flex align-items-center justify-content-center h-100 text-muted small">
+                                No hay datos en este rango
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="bg-white p-4 rounded-4 shadow-sm h-100">
+                        <h6 class="fw-bold text-secondary mb-4"><i class="fas fa-chart-bar me-2 text-primary"></i>Flujo de Citas por Día</h6>
+                        <div style="height: 220px; position: relative;">
+                            <canvas *ngIf="totalCitasDashboard > 0" baseChart
+                                [data]="barChartData"
+                                [options]="barChartOptions"
+                                [type]="'bar'">
+                            </canvas>
+                            <div *ngIf="totalCitasDashboard === 0" class="d-flex align-items-center justify-content-center h-100 text-muted small">
+                                No hay citas registradas en este periodo
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 4. TABLA DE DATOS (NUEVOS BOTONES AÑADIDOS) -->
+            <!-- ========================================== -->
+            <div class="bg-white rounded-4 shadow-sm p-4 mb-4">
+                <h6 class="fw-bold text-secondary mb-3"><i class="fas fa-list me-2 text-primary"></i>Detalle de Operaciones</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="text-secondary small fw-bold text-uppercase border-0 rounded-start px-3">Paciente</th>
+                                <th class="text-secondary small fw-bold text-uppercase border-0">Servicio</th>
+                                <th class="text-secondary small fw-bold text-uppercase border-0">Fecha y Hora</th>
+                                <th class="text-secondary small fw-bold text-uppercase border-0">Estado</th>
+                                <th class="text-secondary small fw-bold text-uppercase border-0 text-end rounded-end px-3">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let c of citasFiltradas">
+                                <td class="border-light border-bottom px-3">
+                                    <div class="fw-bold text-dark">{{ c.paciente }}</div>
+                                    <small class="text-muted"><i class="far fa-id-card me-1"></i>{{ c.dni || '---' }}</small>
+                                </td>
+                                <td class="border-light border-bottom"><span class="text-primary fw-bold small">{{ c.nombreServicio || c.servicio }}</span></td>
+                                <td class="border-light border-bottom text-secondary small"><i class="far fa-clock me-1"></i> {{ c.fechaHora | date:'dd/MM/yyyy h:mm a' }}</td>
+                                <td class="border-light border-bottom">
+                                    <!-- Insignia actualizada para admitir el estado 'Observado' -->
+                                    <span class="badge rounded-pill px-3 py-1 shadow-sm" [ngClass]="{
+                                        'bg-warning text-dark': c.estado === 'Pendiente', 
+                                        'bg-success': c.estado === 'Confirmada', 
+                                        'bg-danger': c.estado === 'Cancelada',
+                                        'bg-info text-dark': c.estado === 'Observado'}">
+                                        {{ c.estado }}
+                                    </span>
+                                </td>
+                                <td class="border-light border-bottom text-end px-3">
+                                    
+                                    <!-- 🔵 NUEVO: Botón Ver Voucher (Visible si hay comprobante) -->
+                                    <button *ngIf="c.comprobantePago" class="btn btn-sm btn-info me-2 rounded-circle shadow-sm text-white border-0" style="width: 32px; height: 32px; padding: 0;" (click)="verVoucher(c)" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Comprobante Yape">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+
+                                    <!-- 🟢 Botón Confirmar (Visible en Pendiente u Observado) -->
+                                    <button *ngIf="c.estado === 'Pendiente' || c.estado === 'Observado'" class="btn btn-sm btn-success me-2 rounded-circle shadow-sm border border-success" style="width: 32px; height: 32px; padding: 0;" (click)="confirmar(c)" data-bs-toggle="tooltip" data-bs-placement="top" title="Confirmar asistencia">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+
+                                    <!-- 🟠 NUEVO: Botón Limbo/Observar (Visible en Pendiente) -->
+                                    <button *ngIf="c.estado === 'Pendiente' && c.comprobantePago" class="btn btn-sm btn-warning me-2 rounded-circle shadow-sm text-dark border border-warning" style="width: 32px; height: 32px; padding: 0;" (click)="mandarALimbo(c)" data-bs-toggle="tooltip" data-bs-placement="top" title="Voucher dudoso (Limbo de 5 min)">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </button>
+
+                                    <!-- 🔴 Botón Cancelar -->
+                                    <button *ngIf="c.estado !== 'Cancelada'" class="btn btn-sm btn-outline-danger rounded-circle shadow-sm bg-white" style="width: 32px; height: 32px; padding: 0;" (click)="terminarCita(c.idCita)" data-bs-toggle="tooltip" data-bs-placement="top" title="Cancelar esta cita">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+
+                                </td>
+                            </tr>
+                            
+                            <tr *ngIf="citasFiltradas.length === 0">
+                                <td colspan="5" class="text-center py-5 bg-white border-0">
+                                    <div class="d-flex flex-column align-items-center justify-content-center opacity-75 mt-3 mb-3">
+                                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center mb-3 border border-2 border-dashed border-secondary-subtle" style="width: 80px; height: 80px;">
+                                            <i class="fas fa-folder-open fa-2x text-secondary"></i>
+                                        </div>
+                                        <h6 class="fw-bold text-dark mb-1">Cero resultados encontrados</h6>
+                                        <p class="text-muted small mb-0">No hay citas registradas con los filtros actuales.<br>Intenta cambiar el rango de fechas o el estado.</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- VISTA: AGENDA, BLOQUEOS Y DEMÁS -->
+        <!-- ========================================== -->
+        <div *ngIf="vistaActual === 'agenda'">
+            <div class="bg-white p-4 rounded-4 shadow-sm mb-4 border-top border-4 border-primary">
+                <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                    <div>
+                        <h5 class="fw-bold m-0 text-dark"><i class="far fa-calendar-alt text-primary me-2"></i>Agenda Semanal</h5>
+                        <small class="text-muted">Gestiona las citas y la disponibilidad de la clínica</small>
+                    </div>
+                    <button class="btn btn-danger rounded-pill px-4 shadow-sm fw-bold" (click)="bloquearHorario()">
+                        <i class="fas fa-ban me-2"></i> Bloqueo Rápido
+                    </button>
+                </div>
+                <div class="calendar-wrapper">
+                    <full-calendar [options]="calendarOptions"></full-calendar>
+                </div>
+            </div>
+
+            <div class="bg-white p-4 rounded-4 shadow-sm border-start border-danger border-4">
+                <div class="mb-4">
+                    <h5 class="fw-bold m-0 text-dark"><i class="fas fa-lock text-danger me-2"></i>Gestión de Días Bloqueados</h5>
+                    <small class="text-muted">Configura feriados o cierres administrativos (No se permitirán reservas en estos horarios)</small>
+                </div>
+                
+                <div class="bg-light p-4 rounded-4 mb-4 border border-light-subtle">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold text-secondary mb-1">Inicio del Bloqueo</label>
+                            <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                                <span class="input-group-text bg-white border-secondary-subtle text-primary border-end-0">
+                                    <i class="fas fa-calendar-plus"></i>
+                                </span>
+                                <input type="datetime-local" class="form-control py-2 shadow-none border-secondary-subtle border-start-0 ps-0" [(ngModel)]="nuevoBloqueo.inicio">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small fw-bold text-secondary mb-1">Fin del Bloqueo</label>
+                            <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                                <span class="input-group-text bg-white border-secondary-subtle text-danger border-end-0">
+                                    <i class="fas fa-calendar-times"></i>
+                                </span>
+                                <input type="datetime-local" class="form-control py-2 shadow-none border-secondary-subtle border-start-0 ps-0" [(ngModel)]="nuevoBloqueo.fin">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label small fw-bold text-secondary mb-1">Motivo del Cierre</label>
+                            <div class="input-group shadow-sm rounded-3 overflow-hidden">
+                                <span class="input-group-text bg-white border-secondary-subtle text-muted border-end-0">
+                                    <i class="fas fa-comment-dots"></i>
+                                </span>
+                                <input type="text" class="form-control py-2 shadow-none border-secondary-subtle border-start-0 ps-0" placeholder="Ej: Feriado, Mantenimiento..." [(ngModel)]="nuevoBloqueo.motivo">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button class="btn btn-danger w-100 fw-bold shadow-sm rounded-3 py-2 d-flex justify-content-center align-items-center gap-2" (click)="crearBloqueoAdmin()" style="height: 42px;">
+                                <i class="fas fa-lock"></i> Bloquear
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light text-secondary small text-uppercase">
+                            <tr>
+                                <th class="border-0 rounded-start px-3">Desde</th>
+                                <th class="border-0">Hasta</th>
+                                <th class="border-0">Motivo</th>
+                                <th class="border-0 text-end rounded-end px-4">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let b of listaBloqueos">
+                                <td class="border-light border-bottom px-3">
+                                    <span class="fw-bold text-dark"><i class="far fa-clock me-1 text-muted"></i> {{ b.fechaInicio | date:'dd/MM/yyyy h:mm a' }}</span>
+                                </td>
+                                <td class="border-light border-bottom">
+                                    <span class="fw-bold text-dark"><i class="far fa-clock me-1 text-muted"></i> {{ b.fechaFin | date:'dd/MM/yyyy h:mm a' }}</span>
+                                </td>
+                                <td class="border-light border-bottom">
+                                    <span class="badge bg-danger bg-opacity-10 text-danger px-3 py-2 rounded-pill border border-danger-subtle">
+                                        <i class="fas fa-info-circle me-1"></i> {{ b.motivo }}
+                                    </span>
+                                </td>
+                                <td class="border-light border-bottom text-end px-3">
+                                    <button class="btn btn-light btn-sm text-danger rounded-circle shadow-sm border" style="width: 35px; height: 35px;" (click)="borrarBloqueo(b.idBloqueo)" title="Eliminar Bloqueo">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr *ngIf="listaBloqueos.length === 0">
+                                <td colspan="4" class="text-center text-muted py-5 bg-light rounded-4 border-dashed mt-2">
+                                    <i class="fas fa-calendar-check fa-2x mb-2 text-secondary opacity-50"></i>
+                                    <br>No hay días bloqueados registrados actualmente.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="vistaActual === 'pacientes'" class="h-100">
+            <app-pacientes-list></app-pacientes-list>
+        </div>
+
+        <div *ngIf="vistaActual === 'laboratorio'">
+            <div class="dash-card border-blue text-center p-5">
+                <i class="fas fa-teeth-open fa-3x text-muted mb-3"></i>
+                <h3>Gestión de Laboratorio</h3>
+                <p class="text-muted">Módulo en construcción...</p>
+            </div>
+        </div>
+        
+    </div>
+</div>

@@ -1,0 +1,143 @@
+/* --- TARJETA PRINCIPAL --- */
+.card {
+    border-radius: 20px;
+    border: none;
+    background-color: #ffffff;
+    box-shadow: 0 15px 35px rgba(50, 50, 93, 0.1), 0 5px 15px rgba(0, 0, 0, 0.07);
+    overflow: hidden; /* Para que el borde de arriba respete el radio */
+    border-top: 6px solid #00bcd4; /* Borde superior de color Cyan */
+}
+
+/* --- BUSCADOR (Estilo Neumórfico suave) --- */
+.input-group {
+    border-radius: 50px;
+    background-color: #f0f2f5; /* Gris muy suave */
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+}
+
+.input-group:focus-within {
+    background-color: #fff;
+    border-color: #00bcd4; /* Se ilumina al escribir */
+    box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.1);
+}
+
+.input-group-text {
+    background: transparent;
+    border: none;
+    color: #00bcd4; /* Lupa de color */
+}
+
+.form-control {
+    border: none;
+    background: transparent;
+    color: #333;
+    font-weight: 500;
+}
+.form-control:focus { box-shadow: none; }
+
+/* --- TABLA VIBRANTE --- */
+.table { margin-bottom: 0; }
+
+/* ENCABEZADO DEGRADADO */
+.table thead th {
+    background: linear-gradient(45deg, #0288d1, #26c6da); /* Azul a Cyan */
+    color: white;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 15px;
+    border: none;
+    font-weight: 600;
+}
+/* Redondear esquinas del encabezado */
+.table thead th:first-child { border-top-left-radius: 10px; }
+.table thead th:last-child { border-top-right-radius: 10px; }
+
+/* FILAS */
+.table tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.table tbody tr:hover {
+    background-color: #e0f7fa; /* Fondo Cyan muy suave al pasar mouse */
+    transform: scale(1.01);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    z-index: 5;
+    position: relative;
+}
+
+.table td {
+    vertical-align: middle;
+    padding: 15px;
+    color: #555;
+    font-weight: 500;
+}
+
+/* --- AVATAR (DEGRADADO DIVERTIDO) --- */
+.avatar-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* Degradado vibrante: Azul Rey a Morado */
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 10px rgba(0, 242, 254, 0.3);
+    border: 2px solid white; /* Anillo blanco */
+}
+
+/* --- BADGE DE FECHA (COLOR PASTEL) --- */
+.badge-fecha {
+    background-color: #ede7f6; /* Lila muy suave */
+    color: #673ab7; /* Texto morado */
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    border: 1px solid #d1c4e9;
+}
+
+/* --- BOTONES DE ACCIÓN (CON PERSONALIDAD) --- */
+.btn-action {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    background-color: #f8f9fa;
+    margin-right: 5px;
+}
+
+/* Botón Editar: Naranja */
+.btn-edit { color: #fb8c00; background-color: #fff3e0; }
+.btn-edit:hover { background-color: #fb8c00; color: white; transform: rotate(15deg); }
+
+/* Botón Historial: Azul */
+.btn-history { color: #0277bd; background-color: #e1f5fe; }
+.btn-history:hover { background-color: #0277bd; color: white; transform: translateY(-3px); }
+
+/* --- TEXTOS --- */
+.text-primary { color: #00bcd4 !important; }
+.text-dark { color: #2c3e50 !important; }
+.small { font-size: 0.85rem; }
+
+/* --- PAGINACIÓN --- */
+.page-link {
+    border: none;
+    margin: 0 5px;
+    border-radius: 8px;
+    color: #555;
+    font-weight: 600;
+}
+.page-link:hover {
+    background-color: #b2ebf2;
+    color: #00838f;
+}

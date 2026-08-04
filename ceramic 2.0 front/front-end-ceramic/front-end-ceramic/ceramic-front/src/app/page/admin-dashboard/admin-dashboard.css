@@ -1,0 +1,94 @@
+/* =========================================
+   DISEÑO DE FULLCALENDAR (CUSTOM UI)
+   ========================================= */
+
+/* 1. Variables globales para suavizar bordes y fondos */
+:host {
+    --fc-border-color: #e9ecef;
+    --fc-today-bg-color: rgba(13, 110, 253, 0.03); /* Fondo sutil para el día de hoy */
+    --fc-neutral-bg-color: #f8f9fa;
+    --fc-list-event-hover-bg-color: #f1f3f5;
+}
+
+/* 2. Cabeceras de los días (Quitar subrayado azul de los enlaces) */
+.fc-col-header-cell-cushion,
+.fc-daygrid-day-number {
+    color: #495057 !important;
+    text-decoration: none !important;
+    font-weight: 600;
+    padding: 8px !important;
+    text-transform: capitalize;
+}
+
+.fc-col-header-cell-cushion:hover,
+.fc-daygrid-day-number:hover {
+    color: var(--primary-blue, #0d6efd) !important;
+}
+
+/* 3. Botones de control (Mes, Semana, Hoy, <, >) */
+.fc .fc-button-primary {
+    background-color: #fff !important;
+    color: #495057 !important;
+    border: 1px solid #dee2e6 !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;
+    text-transform: capitalize;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active,
+.fc .fc-button-primary:hover {
+    background-color: #0d6efd !important;
+    color: #fff !important;
+    border-color: #0d6efd !important;
+    transform: translateY(-1px);
+}
+
+/* 4. Título del calendario (Mes y Año) */
+.fc .fc-toolbar-title {
+    font-size: 1.3rem !important;
+    font-weight: 800;
+    color: #2b3035;
+    text-transform: capitalize;
+}
+
+/* 5. Estilo de las Citas (Cajitas verdes en la agenda) */
+.fc-event {
+    border-radius: 6px !important; /* Bordes redondeados modernos */
+    border: none !important; /* Quitar el borde oscuro por defecto */
+    padding: 3px 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.08); /* Sombra suave para dar profundidad */
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fc-event:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    z-index: 5;
+}
+
+/* 6. Textos dentro de la cita */
+.fc-event-title {
+    font-weight: 700 !important;
+    font-size: 0.8rem;
+    line-height: 1.2;
+}
+.fc-event-time {
+    font-weight: 500 !important;
+    font-size: 0.75rem;
+    opacity: 0.9;
+    margin-bottom: 2px;
+}
+
+/* 7. Línea indicadora de la hora actual (La línea roja) */
+.fc-timegrid-now-indicator-line {
+    border-color: #dc3545;
+    border-width: 2px;
+}
+.fc-timegrid-now-indicator-arrow {
+    border-color: #dc3545;
+    background-color: #dc3545;
+}

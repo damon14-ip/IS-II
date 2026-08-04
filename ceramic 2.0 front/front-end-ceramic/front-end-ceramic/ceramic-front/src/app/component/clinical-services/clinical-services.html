@@ -1,0 +1,30 @@
+<section id="servicios" class="section-padding bg-light">
+    <div class="container">
+        
+        <div class="text-center mb-5">
+            <h2 class="section-title fw-bold text-dark">Nuestros Servicios Clínicos</h2>
+            <div class="title-underline"></div>
+        </div>
+
+        <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-4">
+            
+            <div class="col" *ngFor="let t of tratamientos">
+                <div class="service-card">
+                    <i class="{{t.icon}} icon-box"></i>
+                    <h5>{{t.title}}</h5>
+                    <p>{{t.desc}}</p>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="service-card card-cta">
+                    <i class="far fa-calendar-check icon-box text-white"></i>
+                    <h5 class="text-white">¿NECESITAS AYUDA?</h5>
+                    <p class="text-white-50 small">Haz clic aquí para reservar tu cita con nosotros hoy mismo.</p>
+                    <a href="#agendar" class="stretched-link"></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

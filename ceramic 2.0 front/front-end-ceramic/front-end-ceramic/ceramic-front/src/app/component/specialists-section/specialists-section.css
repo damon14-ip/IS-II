@@ -1,0 +1,35 @@
+.section-title {
+    color: #003366;
+}
+
+.title-underline {
+    width: 60px;
+    height: 4px;
+    background-color: #00bcd4;
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+.doctor-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid #f0f0f0;
+}
+
+.doctor-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+    border-color: #00bcd4;
+}
+
+.img-box img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 4px solid #f8f9fa;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.doctor-card:hover .img-box img {
+    border-color: #00bcd4;
+}

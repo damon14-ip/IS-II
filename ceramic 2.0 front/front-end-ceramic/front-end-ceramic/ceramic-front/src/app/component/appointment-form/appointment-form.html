@@ -1,0 +1,257 @@
+<div class="booking-card">
+    <h3 class="text-center mb-2 text-primary fw-bold">Reservar Cita</h3>
+    
+    <div class="text-center mb-4">
+         <a href="javascript:void(0)" (click)="abrirConsultaEstado()" class="text-decoration-none small fw-bold text-secondary text-hover-primary" style="cursor: pointer;">
+             <i class="fas fa-search me-1"></i> ¿Ya tienes una cita? Consulta su estado aquí
+         </a>
+    </div>
+            
+    <form [formGroup]="citaForm" (ngSubmit)="agendar()">
+        <!-- DNI con botón de limpieza y mensaje amigable -->
+        <div class="form-floating mb-3 position-relative">
+            <input type="text" 
+                   class="form-control pe-5" 
+                   formControlName="dni" 
+                   (blur)="buscarDni()" 
+                   (keyup.enter)="buscarDni()" 
+                   maxlength="8"
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                   [ngClass]="{'is-invalid': citaForm.get('dni')?.invalid && citaForm.get('dni')?.touched}">
+            <label>DNI (8 dígitos)</label>
+            
+            <!-- Botón Limpiar -->
+            <button *ngIf="citaForm.get('dni')?.value"
+                    type="button" 
+                    class="btn btn-link text-secondary position-absolute top-50 end-0 translate-middle-y me-1 text-decoration-none shadow-none" 
+                    (click)="citaForm.patchValue({dni: '', nombre: ''})"
+                    title="Limpiar documento">
+                <i class="fas fa-times-circle fs-5 hover-danger"></i>
+            </button>
+
+            <div *ngIf="citaForm.get('dni')?.invalid && citaForm.get('dni')?.touched" class="text-danger small mt-1 fw-medium">
+                <i class="fas fa-info-circle me-1"></i> Por favor, revisa tu documento e ingresa exactamente los 8 números.
+            </div>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="text" 
+                   class="form-control" 
+                   formControlName="nombre" 
+                   readonly 
+                   placeholder="Nombre completo"
+                   oninput="this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')"
+                   [ngClass]="{'is-invalid': citaForm.get('nombre')?.invalid && citaForm.get('nombre')?.touched}">
+            <label>Nombre Completo</label>
+            <div *ngIf="citaForm.get('nombre')?.invalid && citaForm.get('nombre')?.touched" class="text-danger small mt-1 fw-medium">
+                <i class="fas fa-info-circle me-1"></i> Necesitamos tu nombre para poder registrar tu atención.
+            </div>
+        </div>
+
+        <!-- 1. CAMPO: TELÉFONO ORIGINAL -->
+        <div class="form-floating mb-3">
+            <input type="tel" 
+                   class="form-control" 
+                   formControlName="telefono" 
+                   placeholder="Teléfono"
+                   maxlength="9"
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                   [ngClass]="{'is-invalid': citaForm.get('telefono')?.invalid && citaForm.get('telefono')?.touched}">
+            <label>Teléfono / WhatsApp</label>
+            <div *ngIf="citaForm.get('telefono')?.invalid && citaForm.get('telefono')?.touched" class="text-danger small mt-1 fw-medium">
+                <i class="fas fa-info-circle me-1"></i> Ingresa un número celular válido de 9 dígitos para contactarte.
+            </div>
+        </div>
+
+        <!-- 2. CAMPO: NUEVA CONFIRMACIÓN DE TELÉFONO (Seguridad de Tipeo) -->
+        <div class="form-floating mb-3">
+            <input type="tel" 
+                   class="form-control" 
+                   formControlName="confirmarTelefono" 
+                   placeholder="Confirmar Teléfono"
+                   maxlength="9"
+                   oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                   [ngClass]="{'is-invalid': (citaForm.get('confirmarTelefono')?.invalid || citaForm.hasError('phoneMismatch')) && citaForm.get('confirmarTelefono')?.touched}">
+            <label>Confirmar Teléfono / WhatsApp</label>
+            
+            <!-- Mensaje si está vacío -->
+            <div *ngIf="citaForm.get('confirmarTelefono')?.hasError('required') && citaForm.get('confirmarTelefono')?.touched" class="text-danger small mt-1 fw-medium">
+                <i class="fas fa-info-circle me-1"></i> Por favor, repite tu número de celular.
+            </div>
+            <!-- Mensaje de Alerta si NO COINCIDEN -->
+            <div *ngIf="citaForm.hasError('phoneMismatch') && citaForm.get('confirmarTelefono')?.touched && !citaForm.get('confirmarTelefono')?.hasError('required')" class="text-danger small mt-1 fw-bold">
+                <i class="fas fa-exclamation-triangle me-1"></i> Los números de teléfono no coinciden. Revisa que estén bien escritos.
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <select class="form-select py-3" 
+                    formControlName="idServicio"
+                    [ngClass]="{'is-invalid': citaForm.get('idServicio')?.invalid && citaForm.get('idServicio')?.touched}">
+                <option value="" disabled selected>Seleccionar Tratamiento...</option>
+                <option *ngFor="let s of listaServicios" [value]="s.idServicio">
+                    {{ s.nombre }}
+                </option>
+            </select>
+            <div *ngIf="citaForm.get('idServicio')?.invalid && citaForm.get('idServicio')?.touched" class="text-danger small mt-1 fw-medium">
+                <i class="fas fa-info-circle me-1"></i> Por favor, selecciona el tratamiento que necesitas.
+            </div>
+        </div>
+
+        <div class="mb-4">
+            <label class="fw-bold mb-2 text-muted">Fecha y Hora de Cita</label>
+            <button type="button" 
+                    class="btn btn-outline-primary w-100 py-3 d-flex justify-content-between align-items-center shadow-sm"
+                    [ngClass]="{'border-danger': citaForm.get('fechaHora')?.invalid && citaForm.get('fechaHora')?.touched}"
+                    (click)="abrirModalCalendario()">
+                <span class="fw-bold fs-5 text-dark">
+                    <i class="far fa-calendar-alt me-2 text-primary"></i> {{ seleccionTexto }}
+                </span>
+                <span class="badge bg-primary rounded-pill">Elegir</span>
+            </button>
+            <div *ngIf="citaForm.get('fechaHora')?.invalid && citaForm.get('fechaHora')?.touched" class="text-danger small mt-1 fw-medium">
+                <i class="fas fa-info-circle me-1"></i> Elige un horario disponible en nuestro calendario.
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- NUEVA SECCIÓN: PAGO DE RESERVA (YAPE/PLIN) -->
+        <!-- ========================================== -->
+        <div class="card border-primary mb-4 shadow-sm rounded-4 overflow-hidden">
+            <div class="card-header bg-primary text-white py-2 border-0">
+                <h6 class="mb-0 fw-bold"><i class="fas fa-qrcode me-2"></i>Pago de Reserva (S/ 20.00)</h6>
+            </div>
+            <div class="card-body bg-light text-center p-4">
+                <p class="small text-secondary mb-3">Para asegurar tu horario, requerimos un adelanto. Este monto será descontado del costo total de tu tratamiento en clínica.</p>
+                
+                <div class="d-flex justify-content-center align-items-center gap-3 mb-4 p-3 bg-white rounded-3 shadow-sm border">
+                
+                    <div class="text-start">
+                        <div class="badge rounded-pill mb-1" style="background-color: #7400b8;"><i class="fas fa-mobile-alt me-1"></i> Yape / Plin</div>
+                        <h5 class="fw-bold text-dark mb-0">951 131 970</h5>
+                        <small class="text-muted fw-medium">Dra. Olga (Ceramic Dent)</small>
+                    </div>
+                </div>
+
+                <div class="text-start">
+                    <label class="fw-bold mb-2 text-dark small"><i class="fas fa-paperclip me-1 text-primary"></i>Adjuntar Captura de Pago</label>
+                    <input type="file" 
+                           class="form-control py-2 shadow-sm border-secondary-subtle" 
+                           accept="image/png, image/jpeg, image/jpg"
+                           (change)="onArchivoSeleccionado($event)"
+                           id="inputVoucher">
+                    
+                    <!-- Mensajes dinámicos de validación del archivo -->
+                    <div class="form-text small text-danger mt-1 fw-medium" *ngIf="!archivoVoucher">
+                        <i class="fas fa-exclamation-circle me-1"></i> Obligatorio adjuntar el voucher para confirmar.
+                    </div>
+                    <div class="form-text small text-success mt-1 fw-bold" *ngIf="archivoVoucher">
+                        <i class="fas fa-check-circle me-1"></i> Voucher adjuntado correctamente.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Botón bloqueado si el formulario es inválido O si no hay archivo (Zero-Lock) -->
+        <button type="submit" 
+                class="btn btn-cta shadow mt-2 w-100 fw-bold py-3 text-uppercase" 
+                [disabled]="citaForm.invalid || !archivoVoucher">
+            <i class="fas fa-check-circle me-2"></i> CONFIRMAR MI CITA
+        </button>
+    </form>
+</div>
+
+<!-- EL CÓDIGO DEL MODAL DEL CALENDARIO -->
+<div class="modal fade" id="calendarModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content border-0">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold"><i class="far fa-clock me-2"></i> Disponibilidad de Horarios</h5>
+                <button type="button" class="btn-close btn-close-white" id="btnCloseModal" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body bg-white p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded shadow-sm border">
+                    <button type="button" class="btn btn-outline-secondary rounded-circle" (click)="cambiarSemana(-1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    
+                    <div class="text-center">
+                        <h4 class="m-0 fw-bold text-dark text-capitalize" *ngIf="diasSemana.length > 0">
+                            {{ diasSemana[0].nombre | date:'d MMM' : '' : 'es' }} - {{ diasSemana[6].nombre | date:'d MMM' : '' : 'es' }}
+                        </h4>
+                        <small class="text-muted">Horarios disponibles</small>
+                    </div>
+
+                    <button type="button" class="btn btn-outline-secondary rounded-circle" (click)="cambiarSemana(1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <div class="table-responsive shadow rounded bg-white">
+                    <table class="table table-bordered text-center mb-0 align-middle">
+                        <thead class="bg-primary text-white sticky-top">
+                            <tr>
+                                <th class="p-3" style="width: 100px;">Hora</th>
+                                <th *ngFor="let dia of diasSemana" class="p-3 day-col">
+                                    <div class="small opacity-75 text-uppercase">
+                                        {{ dia.nombre | date:'EEE' : '' : 'es' | titlecase }}
+                                    </div>
+                                    <div class="fs-5 fw-bold">
+                                        {{ dia.nombre | date:'dd' }}
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let hora of horasDia">
+                                <td class="fw-bold text-secondary bg-light align-middle border-end" style="font-size: 0.9rem;">
+                                    {{ formato12Horas(hora) }}
+                                </td>
+                                
+                                <td *ngFor="let dia of diasSemana" class="p-1 align-middle bg-white">
+                                    
+                                    <div class="slot-box"
+                                         [ngClass]="obtenerEstadoSlot(dia.fecha, hora)"
+                                         [class.selected]="celdaSeleccionada?.fecha === dia.fecha && celdaSeleccionada?.hora === hora"
+                                         (click)="seleccionarCelda(dia.fecha, hora)">
+                                         
+                                         <span *ngIf="obtenerEstadoSlot(dia.fecha, hora) === 'OCUPADO'">
+                                             RESERVADO
+                                         </span>
+
+                                         <span *ngIf="obtenerEstadoSlot(dia.fecha, hora) === 'BLOQUEADO'">
+                                             CERRADO
+                                         </span>
+
+                                         <span *ngIf="obtenerEstadoSlot(dia.fecha, hora) === 'LIBRE' && !(celdaSeleccionada?.fecha === dia.fecha && celdaSeleccionada?.hora === hora)">
+                                             LIBRE
+                                         </span>
+
+                                         <span *ngIf="celdaSeleccionada?.fecha === dia.fecha && celdaSeleccionada?.hora === hora">
+                                             <i class="fas fa-check-circle fa-lg"></i>
+                                         </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="d-flex justify-content-center gap-4 mt-3 flex-wrap">
+                    <div class="d-flex align-items-center"><div class="legend-box available me-2"></div> Disponible</div>
+                    <div class="d-flex align-items-center"><div class="legend-box occupied me-2"></div> Reservado</div>
+                    <div class="d-flex align-items-center"><div class="legend-box blocked me-2"></div> Cerrado/Feriado</div>
+                    <div class="d-flex align-items-center"><div class="legend-box selected me-2"></div> Tu Selección</div>
+                </div>
+
+            </div>
+            <div class="modal-footer bg-white">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success fw-bold px-4" (click)="confirmarSeleccionModal()" [disabled]="!celdaSeleccionada">
+                    Confirmar Horario
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

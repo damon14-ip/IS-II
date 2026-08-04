@@ -1,0 +1,62 @@
+/* Estabilizar el cursor en toda la sección principal */
+:host {
+    display: block;
+    cursor: default; /* El cursor base será siempre la flecha */
+}
+
+/* Asegurar que las secciones no interfieran con el puntero */
+.hero-section, section {
+    cursor: default;
+}
+
+/* Solo los elementos interactivos cambian el cursor */
+a, button, .slot-cell:not(.occupied), .navbar-brand, .nav-link {
+    cursor: pointer !important;
+}
+
+/* Inputs siempre con cursor de texto */
+input.form-control:not([readonly]) {
+    cursor: text !important;
+}
+#agendar {
+    position: relative;
+    z-index: 5; /* Asegura que el formulario esté al frente */
+}
+
+.booking-card {
+    pointer-events: all; /* Asegura que capture los eventos del mouse */
+}
+
+/* =========================================
+   DISEÑO DEL MODAL DE LOGIN ADMIN
+   ========================================= */
+.custom-input-group .input-group-text,
+.custom-input-group .form-control {
+    border-color: #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+/* Efecto focus: ilumina el borde y el icono cuando la doctora escribe */
+.custom-input-group:focus-within .input-group-text,
+.custom-input-group:focus-within .form-control {
+    border-color: var(--primary-blue, #0d6efd);
+}
+.custom-input-group:focus-within .input-group-text i {
+    color: var(--primary-blue, #0d6efd);
+}
+
+/* Estilización del botón */
+.btn-login {
+    border-radius: 50rem;
+    background: var(--primary-blue, #0d6efd);
+    border: none;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(13, 110, 253, 0.2);
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(13, 110, 253, 0.4);
+    background: #0b5ed7;
+}

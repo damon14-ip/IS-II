@@ -1,0 +1,30 @@
+/* --- ESTILOS PARTE 1: ¿POR QUÉ ELEGIRNOS? --- */
+.why-us-section {
+    background-color: #0066ff; /* Azul Brillante */
+    padding: 60px 0;
+}
+
+.icon-wrapper i {
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    transition: transform 0.3s ease;
+}
+
+.col-6:hover i {
+    transform: scale(1.2);
+}
+
+/* --- ESTILOS PARTE 2: FOOTER OSCURO --- */
+.main-footer {
+    background-color: #003366; /* Azul Oscuro Corporativo */
+}
+
+.footer-link {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer-link:hover {
+    color: #ffc107; /* Amarillo */
+    padding-left: 5px;
+}

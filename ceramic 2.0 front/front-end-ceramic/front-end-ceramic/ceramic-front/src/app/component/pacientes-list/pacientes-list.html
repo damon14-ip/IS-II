@@ -1,0 +1,119 @@
+<div class="card border-0 shadow-sm mt-4">
+    <div class="card-body p-4">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h5 class="fw-bold text-primary mb-1">
+                    <i class="fas fa-users me-2"></i> Directorio de Pacientes
+                </h5>
+                <small class="text-muted">Mostrando registros ordenados alfabéticamente</small>
+            </div>
+
+            <!-- SOLUCIÓN: Flexbox con 'gap-2' para alinear perfectamente el buscador y el botón -->
+            <div class="d-flex w-50 gap-2">
+                <div class="input-group shadow-sm">
+                    <span class="input-group-text bg-white border-end-0 text-muted">
+                        <i class="fas fa-search"></i>
+                    </span>
+                    <input type="text" 
+                    id="buscadorDni"
+                    name="busquedaDNI"
+                    class="form-control border-start-0 ps-0" 
+                    placeholder="Buscar por DNI..." 
+                    [(ngModel)]="busquedaDNI" 
+                    (input)="onBuscarCambio()"
+                    (keypress)="soloNumeros($event)" 
+                    maxlength="8">
+                </div>
+                <button class="btn btn-primary px-3 shadow-sm rounded" title="Nuevo Paciente">
+                    <i class="fas fa-plus"></i>
+                </button> 
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead> 
+                    <tr>
+                        <th class="py-3 ps-3">PACIENTE</th>
+                        <th class="py-3">CONTACTO</th>
+                        <th class="py-3">FECHA REGISTRO</th>
+                        <th class="py-3 text-center">ACCIONES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let p of pacientesPaginados">
+                        <td class="ps-3 py-3">
+                            <div class="d-flex align-items-center">
+                                <!-- RESTAURADO: Tu clase CSS original para el avatar -->
+                                <div class="avatar-circle me-3">
+                                    {{ p.nombre.charAt(0) }}
+                                </div>
+                                <div>
+                                    <div class="fw-bold text-dark">{{ p.nombre }}</div>
+                                    <div class="small text-muted mt-1"><i class="far fa-id-card me-1"></i> {{ p.dni }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        
+                        <td class="py-3">
+                            <div class="text-success small fw-bold">
+                                <i class="fab fa-whatsapp me-1"></i> {{ p.telefono }}
+                            </div>
+                        </td>
+                        
+                        <td class="py-3">
+                            <!-- RESTAURADO: Tu clase CSS original para la fecha -->
+                            <span class="badge-fecha shadow-sm">
+                                <i class="far fa-calendar-alt me-1"></i> {{ p.fechaRegistro | date:'dd/MM/yyyy' }}
+                            </span>
+                        </td>
+
+                        <td class="py-3 text-center">
+                            <!-- BOTÓN ALINEADO: Estilo limpio que hace juego con tu diseño -->
+                            <button class="btn btn-sm btn-outline-primary px-3 shadow-sm" title="Ver Historial Clínico" (click)="verHistorial(p)">
+                                <i class="fas fa-history me-1"></i> Historial
+                            </button>
+                        </td>
+                    </tr>
+                    
+                    <tr *ngIf="pacientesPaginados.length === 0">
+                        <td colspan="4" class="text-center py-5 text-muted">
+                            <i class="fas fa-search fa-2x mb-3 d-block text-secondary opacity-50"></i>
+                            No se encontraron pacientes con ese criterio.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top" *ngIf="pacientesFiltrados.length > 0">
+            <small class="text-muted">
+                Mostrando {{ pacientesPaginados.length }} de {{ pacientesFiltrados.length }} pacientes
+            </small>
+            
+            <nav>
+                <ul class="pagination pagination-sm mb-0 shadow-sm">
+                    <li class="page-item" [class.disabled]="paginaActual === 1">
+                        <button class="page-link text-secondary" (click)="cambiarPagina(-1)">
+                            <i class="fas fa-chevron-left me-1"></i> Anterior
+                        </button>
+                    </li>
+                    
+                    <li class="page-item disabled">
+                        <span class="page-link border-start-0 border-end-0 text-dark fw-bold bg-light">
+                            Página {{ paginaActual }} de {{ totalPaginas }}
+                        </span>
+                    </li>
+
+                    <li class="page-item" [class.disabled]="paginaActual === totalPaginas">
+                        <button class="page-link text-secondary" (click)="cambiarPagina(1)">
+                            Siguiente <i class="fas fa-chevron-right ms-1"></i>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+    </div>
+</div>

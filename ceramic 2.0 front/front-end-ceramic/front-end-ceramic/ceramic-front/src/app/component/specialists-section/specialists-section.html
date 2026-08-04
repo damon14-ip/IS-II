@@ -1,0 +1,25 @@
+<section id="especialistas" class="section-padding bg-light">
+    <div class="container">
+        
+        <div class="text-center mb-5">
+            <h2 class="fw-bold section-title">Conoce a los Especialistas</h2>
+            <div class="title-underline"></div>
+        </div>
+
+        <div class="row justify-content-center g-4">
+            
+            @for (doc of doctores; track $index) {
+                <div class="col-md-6 col-lg-4">
+                    <div class="doctor-card bg-white text-center p-4 rounded shadow-sm">
+                        <div class="img-box mb-3">
+                            <img [src]="doc.foto" [alt]="doc.nombre" class="rounded-circle">
+                        </div>
+                        <h5 class="fw-bold text-dark">{{ doc.nombre }}</h5>
+                        <p class="text-info mb-0">{{ doc.especialidad }}</p>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</section>
